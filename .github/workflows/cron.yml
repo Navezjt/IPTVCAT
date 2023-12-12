@@ -1,4 +1,4 @@
-name: Scrape Cron 
+name: Scrape Cron
 
 on:
   schedule:
