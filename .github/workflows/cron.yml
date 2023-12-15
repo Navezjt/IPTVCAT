@@ -48,12 +48,8 @@ Puestos de trabajo:
       - name: Crear versión
         Identificación: create_release
         Usos: Acciones/Crear-release@v1
-      # Runs a set of commands using the runners shell 
-      - name: config
-        run: |
-          git pull
-          git config --global user.email "seonavez@gmail.com"
-          git config --global user.name "@Navezjt"
+        env:
+          GITHUB_TOKEN: ${{ secretos. ACCESS_TOKEN }}
         con:
           tag_name: ${{ steps.date.outputs.date }}
           release_name: Liberar ${{ steps.date.outputs.date }}
