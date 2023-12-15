@@ -1,72 +1,68 @@
-nombre: Scrape Cron
+name: Scrape Cron
 
-en:
-  Horario:
+on:
+  schedule:
     - cron: "37 12 * * *"
 
-Puestos de trabajo:
-  Construir:
-    nombre: Scrape Cron
-    Se ejecuta: ubuntu-latest
-    Pasos:
-      - name: Obtener la fecha actual
-        ID: Fecha
+jobs:
+  build:
+    name: Scrape Cron
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date
+        id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-      - name: Configurar Go 1.x
-        Usos: Acciones/Setup-go@v2
-        con:
-          Versión: ^1.13
-        ID: Ir
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.13
+        id: go
 
-      - name: Código de pago
-        Usos: Acciones/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Obtener dependencias
-        Ejecutar: |
- ve a buscar -v -t -d ./...
- if [ -f Gopkg.toml ]; entonces
- https://raw.githubusercontent.com/golang/dep/master/install.sh rizos | Sh
- Garantía de DEP
- Fi
-      - Nombre: Ejecutar
-        Ejecutar: Ir a correr .
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          fi
+      - name: run
+        run: go run .
 
-      - name: Archivos de confirmación
-        Ejecutar: |
+      - name: Commit files
+        run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
- git commit -m "cron: nuevos datos" -a
-      - name: Cambios de inserción
-        Usos: ad-m/github-push-action@master
-      # Runs a set of commands using the runners shell 
-      - name: config
+          git commit -m "cron: new data" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Zip artifact
         run: |
-          git pull
-          git config --global user.email "seonavez@gmail.com"
-          git config --global user.name "@Navezjt"
-
-      - nombre: Artefacto zip
-        Ejecutar: |
- zip --junk-paths -r transmite datos
-      - name: Crear versión
-        Identificación: create_release
-        Usos: Acciones/Crear-release@v1
+          zip --junk-paths -r streams data
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secretos. ACCESS_TOKEN }}
-        con:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
           tag_name: ${{ steps.date.outputs.date }}
-          release_name: Liberar ${{ steps.date.outputs.date }}
-          Borrador: Falso
-          Presentación: Falso
+          release_name: Release ${{ steps.date.outputs.date }}
+          draft: false
+          prerelease: false
 
-      - name: Cargar recurso de versión
-        ID: upload-release-asset
-        Usos: actions/upload-release-asset@v1
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secretos. ACCESS_TOKEN }}
-        con:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./streams.zip
-          asset_name: Arroyos.zip
-          asset_content_type: solicitud/zip
+          asset_name: streams.zip
+          asset_content_type: application/zip
