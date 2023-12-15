@@ -1,0 +1,22 @@
+Nombre: Actualización automática
+en:
+  workflow_dispatch:
+  Horario:
+    - cron: '0 3 * * *'
+Puestos de trabajo:
+
+  iptvcat-scraper:
+      Se ejecuta: ubuntu-latest
+      Pasos:
+      - nombre: Checkout
+        Usos: Acciones/checkout@v2.3.1
+      - name: Instalar dependencias
+        Ejecutar: Instalación de npm
+      - nombre: Run Scrapper
+        Ejecutar: inicio de npm
+      - name: Implementar en GitHub Pages
+        utiliza: JamesIves/github-pages-deploy-action@4.1.0
+        con:
+          Rama: gh-pages
+          Carpeta: Datos
+          Limpio: Falso
