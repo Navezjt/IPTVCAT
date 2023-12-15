@@ -55,6 +55,7 @@ jobs:
         uses: actions/create-release@v1
       # Runs a set of commands using the runners shell 
       - name: config
+        run: |
           git pull
           git config --global user.email "seonavez@gmail.com"
           git config --global user.name "@Navezjt"
@@ -69,6 +70,7 @@ jobs:
         uses: actions/upload-release-asset@v1
       # Runs a set of commands using the runners shell 
       - name: config
+        run: |
           git pull
           git config --global user.email "seonavez@gmail.com"
           git config --global user.name "@Navezjt"
