@@ -39,8 +39,12 @@ Puestos de trabajo:
  git commit -m "cron: nuevos datos" -a
       - name: Cambios de inserción
         Usos: ad-m/github-push-action@master
-        con:
-          github_token: ${{ secretos. ACCESS_TOKEN }}
+      # Runs a set of commands using the runners shell 
+      - name: config
+        run: |
+          git pull
+          git config --global user.email "seonavez@gmail.com"
+          git config --global user.name "@Navezjt"
 
       - nombre: Artefacto zip
         Ejecutar: |
