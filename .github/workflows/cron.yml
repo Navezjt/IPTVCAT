@@ -40,9 +40,12 @@ jobs:
           git commit -m "cron: new data" -a
       - name: Push changes
         uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
-
+      # Runs a set of commands using the runners shell 
+      - name: config
+        run: |
+          git pull
+          git config --global user.email "seonavez@gmail.com"
+          git config --global user.name "@Navezjt"
       - name: Zip artifact
         run: |
           zip --junk-paths -r streams data
