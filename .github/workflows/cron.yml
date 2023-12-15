@@ -1,9 +1,7 @@
 name: Scrape Cron
-
 on:
   schedule:
     - cron: "37 12 * * *"
-
 jobs:
   build:
     name: Scrape Cron
@@ -12,16 +10,13 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
           go-version: ^1.13
         id: go
-
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Get dependencies
         run: |
           go get -v -t -d ./...
@@ -31,7 +26,6 @@ jobs:
           fi
       - name: run
         run: go run .
-
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
@@ -41,7 +35,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}
-
       - name: Zip artifact
         run: |
           zip --junk-paths -r streams data
@@ -55,7 +48,6 @@ jobs:
           release_name: Release ${{ steps.date.outputs.date }}
           draft: false
           prerelease: false
-
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
