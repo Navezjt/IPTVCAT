@@ -37,7 +37,7 @@ jobs:
       - name: Commit files
         run: |
           git config --local user.email "Seonavez@gmail.com"
-          git config --local user.name "Navezjt"
+          git config --local user.name "@Navezjt"
           git add data/*
           git commit -m "cron: new data" -a
       - name: Push changes
